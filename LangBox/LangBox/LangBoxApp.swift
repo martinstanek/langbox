@@ -1,17 +1,19 @@
-//
-//  LangBoxApp.swift
-//  LangBox
-//
-//  Created by Martin Stanek on 18.06.2026.
-//
-
 import SwiftUI
 
 @main
 struct LangBoxApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     var body: some Scene {
-        WindowGroup {
+        MenuBarExtra("LangBox", systemImage: "translate") {
             ContentView()
         }
+        .menuBarExtraStyle(.window)
+    }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
     }
 }
