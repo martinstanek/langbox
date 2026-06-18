@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var sourceLanguage = "English"
-    @State private var targetLanguage = "Czech"
+    @AppStorage("sourceLanguage") private var sourceLanguage = "English"
+    @AppStorage("targetLanguage") private var targetLanguage = "Czech"
     @State private var inputText = ""
     @State private var outputText = ""
     @State private var isTranslating = false
