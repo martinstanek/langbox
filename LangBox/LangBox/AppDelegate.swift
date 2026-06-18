@@ -42,10 +42,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func showContextMenu() {
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "About LangBox", action: #selector(showAbout), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "Settings…", action: #selector(showSettings), keyEquivalent: ","))
+        menu.addItem(NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Settings …", action: #selector(showSettings), keyEquivalent: ","))
         menu.addItem(.separator())
-        menu.addItem(NSMenuItem(title: "Quit LangBox", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
 
         // Temporarily assign the menu so the status item renders it, then clear it
         // so left-click still goes through handleClick next time.

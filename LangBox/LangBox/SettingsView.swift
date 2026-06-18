@@ -28,16 +28,20 @@ struct SettingsView: View
                     .multilineTextAlignment(.trailing)
             }
 
-            Section("Behaviour") {
+            Section("Behaviour")
+            {
                 Toggle("Translate upon paste", isOn: $translateUponPaste)
                 Text("Automatically translate whenever text is pasted into the source field.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Section("Tone") {
-                Picker("", selection: translationStyle) {
-                    ForEach(TranslationStyle.allCases, id: \.self) {
+            Section("Tone")
+            {
+                Picker("", selection: translationStyle)
+                {
+                    ForEach(TranslationStyle.allCases, id: \.self)
+                    {
                         Text($0.label).tag($0)
                     }
                 }

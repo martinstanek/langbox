@@ -1,6 +1,7 @@
 import SwiftUI
 
-struct ContentView: View {
+struct ContentView: View
+{
     @AppStorage("sourceLanguage") private var sourceLanguage = "English"
     @AppStorage("targetLanguage") private var targetLanguage = "Czech"
     @State private var inputText = ""
@@ -12,22 +13,27 @@ struct ContentView: View {
     @AppStorage("lmStudioURL") private var lmStudioURL = "http://10.0.1.106:7001"
     @AppStorage("lmStudioModel") private var lmStudioModel = "google/gemma-3-12b"
 
-    private var translationStyle: TranslationStyle {
+    private var translationStyle: TranslationStyle
+    {
         TranslationStyle(rawValue: translationStyleRaw) ?? .formal
     }
 
-    private var service: TranslationService {
+    private var service: TranslationService
+    {
         TranslationService(baseURL: lmStudioURL, model: lmStudioModel)
     }
 
-    private let languages = [
+    private let languages =
+    [
         "English", "Czech", "Slovak", "Spanish", "French",
         "German", "Italian", "Portuguese", "Polish", "Russian",
         "Japanese", "Chinese", "Korean", "Arabic"
     ]
 
-    var body: some View {
-        VStack(spacing: 0) {
+    var body: some View
+    {
+        VStack(spacing: 0)
+        {
             languageBar
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
@@ -35,7 +41,8 @@ struct ContentView: View {
 
             Divider()
 
-            VStack(spacing: 10) {
+            VStack(spacing: 10)
+            {
                 textPanel(
                     label: "Source",
                     text: $inputText,
