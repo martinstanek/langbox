@@ -8,8 +8,17 @@ struct ContentView: View {
     @State private var isTranslating = false
     @State private var errorMessage: String?
     @AppStorage("translateUponPaste") private var translateUponPaste = false
+    @AppStorage("translationStyle") private var translationStyleRaw = TranslationStyle.formal.rawValue
+    @AppStorage("lmStudioURL") private var lmStudioURL = "http://10.0.1.106:7001"
+    @AppStorage("lmStudioModel") private var lmStudioModel = "google/gemma-3-12b"
 
-    private let service = TranslationService()
+    private var translationStyle: TranslationStyle {
+        TranslationStyle(rawValue: translationStyleRaw) ?? .formal
+    }
+
+    private var service: TranslationService {
+        TranslationService(baseURL: lmStudioURL, model: lmStudioModel)
+    }
 
     private let languages = [
         "English", "Czech", "Slovak", "Spanish", "French",
@@ -160,7 +169,8 @@ struct ContentView: View {
             outputText = try await service.translate(
                 text: inputText,
                 from: sourceLanguage,
-                to: targetLanguage
+                to: targetLanguage,
+                style: translationStyle
             )
         } catch {
             errorMessage = error.localizedDescription

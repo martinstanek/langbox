@@ -1,10 +1,10 @@
 import Foundation
 
 struct TranslationService {
-    private let baseURL = "http://10.0.1.106:7001"
-    private let model = "google/gemma-3-12b"
+    let baseURL: String
+    let model: String
 
-    func translate(text: String, from source: String, to target: String) async throws -> String {
+    func translate(text: String, from source: String, to target: String, style: TranslationStyle = .formal) async throws -> String {
         guard let url = URL(string: "\(baseURL)/v1/chat/completions") else {
             throw TranslationError.invalidURL
         }
@@ -12,7 +12,7 @@ struct TranslationService {
         let body = ChatRequest(
             model: model,
             messages: [
-                .init(role: "system", content: "You are a translation assistant. Translate the text from \(source) to \(target). Return only the translated text, no explanations."),
+                .init(role: "system", content: style.systemPrompt(from: source, to: target)),
                 .init(role: "user", content: text)
             ],
             temperature: 0.3
