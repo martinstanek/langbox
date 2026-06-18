@@ -66,6 +66,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.title = "LangBox Settings"
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
+            window.setContentSize(NSSize(width: 360, height: 160))
             settingsWindow = window
         }
         NSApp.activate(ignoringOtherApps: true)

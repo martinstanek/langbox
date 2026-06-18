@@ -7,6 +7,7 @@ struct ContentView: View {
     @State private var outputText = ""
     @State private var isTranslating = false
     @State private var errorMessage: String?
+    @AppStorage("translateUponPaste") private var translateUponPaste = false
 
     private let service = TranslationService()
 
@@ -32,6 +33,7 @@ struct ContentView: View {
                     trailingButton: {
                         clipboardButton(icon: "clipboard", help: "Paste from clipboard") {
                             inputText = NSPasteboard.general.string(forType: .string) ?? ""
+                            if translateUponPaste { Task { await translate() } }
                         }
                     }
                 )

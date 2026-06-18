@@ -1,16 +1,19 @@
 import SwiftUI
 
 struct SettingsView: View {
+    @AppStorage("translateUponPaste") private var translateUponPaste = false
+
     var body: some View {
-        VStack {
-            Text("Settings")
-                .font(.title2)
-                .fontWeight(.semibold)
-            Text("More options coming soon.")
-                .foregroundStyle(.secondary)
+        Form {
+            Section {
+                Toggle("Translate upon paste", isOn: $translateUponPaste)
+                Text("Automatically translate whenever text is pasted into the source field.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
-        .frame(width: 360, height: 200)
-        .padding()
+        .formStyle(.grouped)
+        .frame(width: 360, height: 160)
     }
 }
 
