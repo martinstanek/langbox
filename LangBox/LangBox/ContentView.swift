@@ -5,6 +5,10 @@ struct ContentView: View {
     @State private var targetLanguage = "Czech"
     @State private var inputText = ""
     @State private var outputText = ""
+    @State private var isTranslating = false
+    @State private var errorMessage: String?
+
+    private let service = TranslationService()
 
     private let languages = [
         "English", "Czech", "Slovak", "Spanish", "French",
@@ -33,6 +37,13 @@ struct ContentView: View {
                 )
 
                 translateButton
+
+                if let error = errorMessage {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
 
                 textPanel(
                     label: "Translation",
@@ -119,15 +130,39 @@ struct ContentView: View {
 
     private var translateButton: some View {
         Button {
-            // translation will be wired up in next step
+            Task { await translate() }
         } label: {
-            Label("Translate", systemImage: "wand.and.sparkles")
-                .frame(maxWidth: .infinity)
+            Group {
+                if isTranslating {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .controlSize(.small)
+                        .tint(.white)
+                } else {
+                    Label("Translate", systemImage: "wand.and.sparkles")
+                }
+            }
+            .frame(maxWidth: .infinity)
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .keyboardShortcut(.return, modifiers: .command)
-        .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isTranslating)
+    }
+
+    private func translate() async {
+        errorMessage = nil
+        isTranslating = true
+        defer { isTranslating = false }
+        do {
+            outputText = try await service.translate(
+                text: inputText,
+                from: sourceLanguage,
+                to: targetLanguage
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 
     // MARK: - Quit Bar
