@@ -169,6 +169,14 @@ struct ContentView: View {
 
     private var quitBar: some View {
         HStack {
+            Button("Clear") {
+                inputText = ""
+                outputText = ""
+            }
+            .buttonStyle(.plain)
+            .font(.caption)
+            .foregroundStyle(.tertiary)
+            .disabled(inputText.isEmpty && outputText.isEmpty)
             Spacer()
             Button("Quit LangBox") {
                 NSApp.terminate(nil)
