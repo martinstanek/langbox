@@ -4,15 +4,15 @@ struct ContentView: View
 {
     @AppStorage("sourceLanguage") private var sourceLanguage = "English"
     @AppStorage("targetLanguage") private var targetLanguage = "Czech"
-    @State private var inputText = ""
-    @State private var outputText = ""
-    @State private var isTranslating = false
-    @State private var errorMessage: String?
     @AppStorage("translateUponPaste") private var translateUponPaste = false
     @AppStorage("translationStyle") private var translationStyleRaw = TranslationStyle.formal.rawValue
     @AppStorage("lmStudioURL") private var lmStudioURL = "http://10.0.1.106:7001"
     @AppStorage("lmStudioModel") private var lmStudioModel = "google/gemma-3-12b"
-
+    @State private var inputText = ""
+    @State private var outputText = ""
+    @State private var isTranslating = false
+    @State private var errorMessage: String?
+    
     private var translationStyle: TranslationStyle
     {
         TranslationStyle(rawValue: translationStyleRaw) ?? .formal
