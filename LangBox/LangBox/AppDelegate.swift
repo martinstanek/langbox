@@ -1,20 +1,23 @@
 import AppKit
 import SwiftUI
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate
+{
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
     private var settingsWindow: NSWindow?
 
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(_ notification: Notification)
+    {
         NSApp.setActivationPolicy(.accessory)
 
         popover = NSPopover()
         popover.behavior = .transient
         popover.contentViewController = NSHostingController(rootView: ContentView())
-
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        if let button = statusItem.button {
+        
+        if let button = statusItem.button
+        {
             button.image = NSImage(systemSymbolName: "translate", accessibilityDescription: "LangBox")
             button.action = #selector(handleClick)
             button.target = self
@@ -22,25 +25,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @objc private func handleClick(_ sender: NSStatusBarButton) {
-        guard let event = NSApp.currentEvent else { return }
-        if event.type == .rightMouseUp {
+    @objc private func handleClick(_ sender: NSStatusBarButton)
+    {
+        guard let event = NSApp.currentEvent else
+        {
+            return
+        }
+        if event.type == .rightMouseUp
+        {
             showContextMenu()
-        } else {
+        }
+        else
+        {
             togglePopover(sender)
         }
     }
 
-    private func togglePopover(_ sender: NSStatusBarButton) {
-        if popover.isShown {
+    private func togglePopover(_ sender: NSStatusBarButton)
+    {
+        if popover.isShown
+        {
             popover.performClose(nil)
-        } else {
+        }
+        else
+        {
             popover.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
             popover.contentViewController?.view.window?.makeKey()
         }
     }
 
-    private func showContextMenu() {
+    private func showContextMenu()
+    {
         let menu = NSMenu()
         menu.addItem(NSMenuItem(title: "About", action: #selector(showAbout), keyEquivalent: ""))
         menu.addItem(NSMenuItem(title: "Settings …", action: #selector(showSettings), keyEquivalent: ","))
@@ -54,13 +69,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.menu = nil
     }
 
-    @objc private func showAbout() {
+    @objc private func showAbout()
+    {
         NSApp.activate(ignoringOtherApps: true)
         NSApp.orderFrontStandardAboutPanel(nil)
     }
 
-    @objc private func showSettings() {
-        if settingsWindow == nil {
+    @objc private func showSettings()
+    {
+        if settingsWindow == nil
+        {
             let controller = NSHostingController(rootView: SettingsView())
             let window = NSWindow(contentViewController: controller)
             window.title = "LangBox Settings"
@@ -69,6 +87,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.setContentSize(NSSize(width: 360, height: 420))
             settingsWindow = window
         }
+        
         NSApp.activate(ignoringOtherApps: true)
         settingsWindow?.center()
         settingsWindow?.makeKeyAndOrderFront(nil)
