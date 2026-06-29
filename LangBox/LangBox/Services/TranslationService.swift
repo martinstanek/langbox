@@ -2,19 +2,20 @@ import Foundation
 
 struct TranslationService
 {
-    let baseURL: String
-    let model: String
+    private var appSettings: AppSettings = AppSettingsProvider.getSettings()
 
     func translate(text: String, from source: String, to target: String, style: TranslationStyle = .formal) async throws -> String
     {
-        guard let url = URL(string: "\(baseURL)/v1/chat/completions")
+        let urlStr = "\(appSettings.lmStudioURL)/v1/chat/completions"
+        
+        guard let url = URL(string: urlStr)
         else
         {
             throw TranslationError.invalidURL
         }
 
         let body = ChatRequest(
-            model: model,
+            model: appSettings.lmStudioModel,
             messages: [
                 .init(role: "system", content: style.systemPrompt(from: source, to: target)),
                 .init(role: "user", content: text)

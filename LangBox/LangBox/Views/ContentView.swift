@@ -2,26 +2,14 @@ import SwiftUI
 
 struct ContentView: View
 {
-    @AppStorage("sourceLanguage") private var sourceLanguage = "English"
-    @AppStorage("targetLanguage") private var targetLanguage = "Czech"
-    @AppStorage("lmStudioURL") private var lmStudioURL = "http://10.0.1.106:7001"
-    @AppStorage("lmStudioModel") private var lmStudioModel = "google/gemma-3-12b"
-    @AppStorage("translateUponPaste") private var translateUponPaste = false
-    @AppStorage("translationStyle") private var translationStyleRaw = TranslationStyle.formal.rawValue
+    private var appSettings: AppSettings = AppSettingsProvider.getSettings()
+    
     @State private var inputText = ""
     @State private var outputText = ""
     @State private var isTranslating = false
     @State private var errorMessage: String?
     
-    private var translationStyle: TranslationStyle
-    {
-        TranslationStyle(rawValue: translationStyleRaw) ?? .formal
-    }
-
-    private var service: TranslationService
-    {
-        TranslationService(baseURL: lmStudioURL, model: lmStudioModel)
-    }
+    private var service = TranslationService()
 
     private let languages =
     [
@@ -49,7 +37,7 @@ struct ContentView: View
                     trailingButton: {
                         clipboardButton(icon: "clipboard", help: "Paste from clipboard") {
                             inputText = NSPasteboard.general.string(forType: .string) ?? ""
-                            if translateUponPaste { Task { await translate() } }
+                            if appSettings.translateUponPaste { Task { await translate() } }
                         }
                     }
                 )
@@ -91,14 +79,14 @@ struct ContentView: View
 
     private var languageBar: some View {
         HStack(spacing: 8) {
-            Picker("", selection: $sourceLanguage) {
+            Picker("", selection: appSettings.$sourceLanguage) {
                 ForEach(languages, id: \.self) { Text($0) }
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
 
             Button {
-                swap(&sourceLanguage, &targetLanguage)
+                swap(&appSettings.sourceLanguage, &appSettings.targetLanguage)
                 swap(&inputText, &outputText)
             } label: {
                 Image(systemName: "arrow.left.arrow.right")
@@ -107,7 +95,7 @@ struct ContentView: View
             .buttonStyle(.plain)
             .help("Swap languages")
 
-            Picker("", selection: $targetLanguage) {
+            Picker("", selection: appSettings.$targetLanguage) {
                 ForEach(languages, id: \.self) { Text($0) }
             }
             .labelsHidden()
@@ -175,9 +163,9 @@ struct ContentView: View
         do {
             outputText = try await service.translate(
                 text: inputText,
-                from: sourceLanguage,
-                to: targetLanguage,
-                style: translationStyle
+                from: appSettings.sourceLanguage,
+                to: appSettings.targetLanguage,
+                style: appSettings.translationStyle.wrappedValue
             )
         } catch {
             errorMessage = error.localizedDescription
