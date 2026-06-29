@@ -49,4 +49,12 @@ class AppSettings
         "German", "Italian", "Portuguese", "Polish", "Russian",
         "Japanese", "Chinese", "Korean", "Arabic"
     ]
+
+    static let isoCode: [String: String] = [
+        "English": "en", "Czech": "cs", "Slovak": "sk",
+        "Spanish": "es", "French": "fr", "German": "de",
+        "Italian": "it", "Portuguese": "pt", "Polish": "pl",
+        "Russian": "ru", "Japanese": "ja", "Chinese": "zh",
+        "Korean": "ko", "Arabic": "ar"
+    ]
 }
