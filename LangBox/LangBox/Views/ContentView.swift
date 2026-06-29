@@ -27,6 +27,7 @@ struct ContentView: View
                 textPanel(
                     label: "Source",
                     text: $inputText,
+                    onEnter: appSettings.translateUponEnter ? { Task { await translate() } } : nil,
                     trailingButton: {
                         clipboardButton(icon: "clipboard", help: "Paste from clipboard") {
                             inputText = NSPasteboard.general.string(forType: .string) ?? ""
@@ -104,6 +105,7 @@ struct ContentView: View
     private func textPanel<Trailing: View>(
         label: String,
         text: Binding<String>,
+        onEnter: (() -> Void)? = nil,
         @ViewBuilder trailingButton: () -> Trailing) -> some View
     {
         VStack(alignment: .leading, spacing: 6)
@@ -127,6 +129,12 @@ struct ContentView: View
                         .fill(.background)
                         .stroke(.separator, lineWidth: 0.5)
                 )
+                .onKeyPress(.return)
+                {
+                    guard let onEnter else { return .ignored }
+                    onEnter()
+                    return .handled
+                }
         }
     }
 
