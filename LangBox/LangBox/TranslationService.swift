@@ -1,11 +1,15 @@
 import Foundation
 
-struct TranslationService {
+struct TranslationService
+{
     let baseURL: String
     let model: String
 
-    func translate(text: String, from source: String, to target: String, style: TranslationStyle = .formal) async throws -> String {
-        guard let url = URL(string: "\(baseURL)/v1/chat/completions") else {
+    func translate(text: String, from source: String, to target: String, style: TranslationStyle = .formal) async throws -> String
+    {
+        guard let url = URL(string: "\(baseURL)/v1/chat/completions")
+        else
+        {
             throw TranslationError.invalidURL
         }
 
@@ -25,13 +29,15 @@ struct TranslationService {
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else
+        {
             throw TranslationError.badResponse((response as? HTTPURLResponse)?.statusCode ?? -1)
         }
 
         let decoded = try JSONDecoder().decode(ChatResponse.self, from: data)
 
-        guard let content = decoded.choices.first?.message.content else {
+        guard let content = decoded.choices.first?.message.content else
+        {
             throw TranslationError.emptyResponse
         }
 
@@ -39,43 +45,47 @@ struct TranslationService {
     }
 }
 
-// MARK: - Request / Response
-
-private struct ChatRequest: Encodable {
+private struct ChatRequest: Encodable
+{
     let model: String
     let messages: [Message]
     let temperature: Double
 
-    struct Message: Encodable {
+    struct Message: Encodable
+    {
         let role: String
         let content: String
     }
 }
 
-private struct ChatResponse: Decodable {
+private struct ChatResponse: Decodable
+{
     let choices: [Choice]
 
-    struct Choice: Decodable {
+    struct Choice: Decodable
+    {
         let message: Message
     }
 
-    struct Message: Decodable {
+    struct Message: Decodable
+    {
         let content: String
     }
 }
 
-// MARK: - Errors
-
-enum TranslationError: LocalizedError {
+enum TranslationError: LocalizedError
+{
     case invalidURL
     case badResponse(Int)
     case emptyResponse
 
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:       return "Invalid server URL."
-        case .badResponse(let code): return "Server returned status \(code)."
-        case .emptyResponse:    return "Model returned an empty response."
+    var errorDescription: String?
+    {
+        switch self
+        {
+            case .invalidURL:       return "Invalid server URL."
+            case .badResponse(let code): return "Server returned status \(code)."
+            case .emptyResponse:    return "Model returned an empty response."
         }
     }
 }
