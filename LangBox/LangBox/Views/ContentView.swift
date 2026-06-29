@@ -11,13 +11,6 @@ struct ContentView: View
     
     private var service = TranslationService()
 
-    private let languages =
-    [
-        "English", "Czech", "Slovak", "Spanish", "French",
-        "German", "Italian", "Portuguese", "Polish", "Russian",
-        "Japanese", "Chinese", "Korean", "Arabic"
-    ]
-
     var body: some View
     {
         VStack(spacing: 0)
@@ -75,43 +68,47 @@ struct ContentView: View
         .frame(width: 460)
     }
 
-    // MARK: - Language Bar
-
-    private var languageBar: some View {
-        HStack(spacing: 8) {
-            Picker("", selection: appSettings.$sourceLanguage) {
-                ForEach(languages, id: \.self) { Text($0) }
+    private var languageBar: some View
+    {
+        HStack(spacing: 8)
+        {
+            Picker("", selection: appSettings.$sourceLanguage)
+            {
+                ForEach(appSettings.languages, id: \.self) { Text($0) }
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
 
-            Button {
+            Button
+            {
                 swap(&appSettings.sourceLanguage, &appSettings.targetLanguage)
                 swap(&inputText, &outputText)
-            } label: {
-                Image(systemName: "arrow.left.arrow.right")
-                    .fontWeight(.medium)
+            }
+            label:
+            {
+                Image(systemName: "arrow.left.arrow.right").fontWeight(.medium)
             }
             .buttonStyle(.plain)
             .help("Swap languages")
 
-            Picker("", selection: appSettings.$targetLanguage) {
-                ForEach(languages, id: \.self) { Text($0) }
+            Picker("", selection: appSettings.$targetLanguage)
+            {
+                ForEach(appSettings.languages, id: \.self) { Text($0) }
             }
             .labelsHidden()
             .frame(maxWidth: .infinity)
         }
     }
 
-    // MARK: - Text Panels
-
     private func textPanel<Trailing: View>(
         label: String,
         text: Binding<String>,
-        @ViewBuilder trailingButton: () -> Trailing
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
+        @ViewBuilder trailingButton: () -> Trailing) -> some View
+    {
+        VStack(alignment: .leading, spacing: 6)
+        {
+            HStack
+            {
                 Text(label)
                     .font(.caption)
                     .fontWeight(.medium)
@@ -132,19 +129,25 @@ struct ContentView: View
         }
     }
 
-    // MARK: - Translate Button
-
-    private var translateButton: some View {
-        Button {
+    private var translateButton: some View
+    {
+        Button
+        {
             Task { await translate() }
-        } label: {
-            Group {
-                if isTranslating {
+        }
+        label:
+        {
+            Group
+            {
+                if isTranslating
+                {
                     ProgressView()
                         .progressViewStyle(.circular)
                         .controlSize(.small)
                         .tint(.white)
-                } else {
+                }
+                else
+                {
                     Label("Translate", systemImage: "wand.and.sparkles")
                 }
             }
@@ -156,27 +159,33 @@ struct ContentView: View
         .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isTranslating)
     }
 
-    private func translate() async {
+    private func translate() async
+    {
         errorMessage = nil
         isTranslating = true
+    
         defer { isTranslating = false }
-        do {
+        do
+        {
             outputText = try await service.translate(
                 text: inputText,
                 from: appSettings.sourceLanguage,
                 to: appSettings.targetLanguage,
                 style: appSettings.translationStyle.wrappedValue
             )
-        } catch {
+        }
+        catch
+        {
             errorMessage = error.localizedDescription
         }
     }
 
-    // MARK: - Quit Bar
-
-    private var quitBar: some View {
-        HStack {
-            Button("Clear") {
+    private var quitBar: some View
+    {
+        HStack
+        {
+            Button("Clear")
+            {
                 inputText = ""
                 outputText = ""
             }
@@ -185,7 +194,8 @@ struct ContentView: View
             .foregroundStyle(.tertiary)
             .disabled(inputText.isEmpty && outputText.isEmpty)
             Spacer()
-            Button("Quit LangBox") {
+            Button("Quit")
+            {
                 NSApp.terminate(nil)
             }
             .buttonStyle(.plain)
@@ -194,10 +204,10 @@ struct ContentView: View
         }
     }
 
-    // MARK: - Helpers
-
-    private func clipboardButton(icon: String, help: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
+    private func clipboardButton(icon: String, help: String, action: @escaping () -> Void) -> some View
+    {
+        Button(action: action)
+        {
             Image(systemName: icon)
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -207,6 +217,7 @@ struct ContentView: View
     }
 }
 
-#Preview {
+#Preview
+{
     ContentView()
 }

@@ -15,6 +15,13 @@ public struct AppSettings
             get: { TranslationStyle(rawValue: translationStyleRaw) ?? .formal },
             set: { translationStyleRaw = $0.rawValue })
     }
+    
+    public let languages =
+    [
+        "English", "Czech", "Slovak", "Spanish", "French",
+        "German", "Italian", "Portuguese", "Polish", "Russian",
+        "Japanese", "Chinese", "Korean", "Arabic"
+    ]
 }
 
 public class AppSettingsProvider
