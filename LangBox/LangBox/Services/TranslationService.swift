@@ -8,14 +8,14 @@ struct TranslationService
         to target: String,
         style: TranslationStyle,
         baseURL: String,
-        model: String) async throws -> String
+        model: String,
+        modelFamily: ModelFamily) async throws -> String
     {
-        if model.lowercased().contains("translategemma")
+        switch modelFamily
         {
+        case .translation:
             return try await translateWithGemma(text: text, from: source, to: target, baseURL: baseURL, model: model)
-        }
-        else
-        {
+        case .generic:
             return try await translateWithChat(text: text, from: source, to: target, style: style, baseURL: baseURL, model: model)
         }
     }

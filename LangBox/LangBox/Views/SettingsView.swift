@@ -26,7 +26,7 @@ struct SettingsView: View
                 }
                 .pickerStyle(.segmented)
                 .labelsHidden()
-                Text("Translation models are specialised kinds of models designed for the translation tasks.")
+                Text("Generic works with any instruction-tuned model. Translation uses a structured format required by models like TranslateGemma — check your model's documentation if unsure.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

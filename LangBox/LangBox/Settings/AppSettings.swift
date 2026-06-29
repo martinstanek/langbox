@@ -30,7 +30,7 @@ class AppSettings
     
     var modelFamilyRaw: String = UserDefaults.standard.string(forKey: "modelFamily") ?? ModelFamily.generic.rawValue
     {
-        didSet { UserDefaults.standard.set(translationStyleRaw, forKey: "modelFamily") }
+        didSet { UserDefaults.standard.set(modelFamilyRaw, forKey: "modelFamily") }
     }
 
     var lmStudioURL: String = UserDefaults.standard.string(forKey: "lmStudioURL") ?? "http://10.0.1.106:7001"

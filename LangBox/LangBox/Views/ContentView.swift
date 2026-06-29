@@ -182,7 +182,8 @@ struct ContentView: View
                 to: appSettings.targetLanguage,
                 style: appSettings.translationStyle,
                 baseURL: appSettings.lmStudioURL,
-                model: appSettings.lmStudioModel
+                model: appSettings.lmStudioModel,
+                modelFamily: appSettings.modelFamily
             )
         }
         catch
