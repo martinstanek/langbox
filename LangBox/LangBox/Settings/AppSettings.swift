@@ -27,6 +27,11 @@ class AppSettings
     {
         didSet { UserDefaults.standard.set(translationStyleRaw, forKey: "translationStyle") }
     }
+    
+    var modelFamilyRaw: String = UserDefaults.standard.string(forKey: "modelFamily") ?? ModelFamily.generic.rawValue
+    {
+        didSet { UserDefaults.standard.set(translationStyleRaw, forKey: "modelFamily") }
+    }
 
     var lmStudioURL: String = UserDefaults.standard.string(forKey: "lmStudioURL") ?? "http://10.0.1.106:7001"
     {
@@ -42,6 +47,12 @@ class AppSettings
     {
         get { TranslationStyle(rawValue: translationStyleRaw) ?? .formal }
         set { translationStyleRaw = newValue.rawValue }
+    }
+    
+    var modelFamily: ModelFamily
+    {
+        get { ModelFamily(rawValue: modelFamilyRaw) ?? .generic }
+        set { modelFamilyRaw = newValue.rawValue }
     }
 
     let languages = [

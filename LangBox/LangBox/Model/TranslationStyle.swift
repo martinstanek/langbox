@@ -9,8 +9,10 @@ public enum TranslationStyle: String, CaseIterable
     {
         switch self
         {
-            case .formal:   return "Formal"
-            case .informal: return "Informal"
+            case .formal:   
+                return "Formal"
+            case .informal: 
+                return "Informal"
         }
     }
 

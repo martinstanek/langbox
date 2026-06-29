@@ -17,6 +17,18 @@ struct SettingsView: View
                 TextField("Model:", text: $settings.lmStudioModel)
                     .textFieldStyle(.plain)
                     .multilineTextAlignment(.trailing)
+                Picker("", selection: $settings.modelFamily)
+                {
+                    ForEach(ModelFamily.allCases, id: \.self)
+                    {
+                        Text($0.label).tag($0)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .labelsHidden()
+                Text("Translation models are specialised kinds of models designed for the translation tasks.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Behaviour")
@@ -48,7 +60,7 @@ struct SettingsView: View
             }
         }
         .formStyle(.grouped)
-        .frame(width: 360, height: 510)
+        .frame(width: 360, height: 600)
     }
 }
 

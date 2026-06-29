@@ -82,7 +82,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
         {
             let controller = NSHostingController(rootView: SettingsView().environment(appSettings))
             let window = NSWindow(contentViewController: controller)
-            window.title = "LangBox Settings"
+            window.title = "Settings"
             window.styleMask = [.titled, .closable]
             window.isReleasedWhenClosed = false
             window.setContentSize(NSSize(width: 360, height: 420))
