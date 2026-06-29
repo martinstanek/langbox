@@ -3,6 +3,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate
 {
+    private let appSettings = AppSettings()
     private var statusItem: NSStatusItem!
     private var popover: NSPopover!
     private var settingsWindow: NSWindow?
@@ -13,7 +14,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
 
         popover = NSPopover()
         popover.behavior = .transient
-        popover.contentViewController = NSHostingController(rootView: ContentView())
+        popover.contentViewController = NSHostingController(rootView: ContentView().environment(appSettings))
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         if let button = statusItem.button
@@ -79,7 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate
     {
         if settingsWindow == nil
         {
-            let controller = NSHostingController(rootView: SettingsView())
+            let controller = NSHostingController(rootView: SettingsView().environment(appSettings))
             let window = NSWindow(contentViewController: controller)
             window.title = "LangBox Settings"
             window.styleMask = [.titled, .closable]

@@ -2,20 +2,16 @@ import Foundation
 
 struct TranslationService
 {
-    private var appSettings: AppSettings = AppSettingsProvider.getSettings()
-
-    func translate(text: String, from source: String, to target: String, style: TranslationStyle = .formal) async throws -> String
+    func translate(text: String, from source: String, to target: String, style: TranslationStyle, baseURL: String, model: String) async throws -> String
     {
-        let urlStr = "\(appSettings.lmStudioURL)/v1/chat/completions"
-        
-        guard let url = URL(string: urlStr)
+        guard let url = URL(string: "\(baseURL)/v1/chat/completions")
         else
         {
             throw TranslationError.invalidURL
         }
 
         let body = ChatRequest(
-            model: appSettings.lmStudioModel,
+            model: model,
             messages: [
                 .init(role: "system", content: style.systemPrompt(from: source, to: target)),
                 .init(role: "user", content: text)
@@ -30,14 +26,16 @@ struct TranslationService
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200
+        else
         {
             throw TranslationError.badResponse((response as? HTTPURLResponse)?.statusCode ?? -1)
         }
 
         let decoded = try JSONDecoder().decode(ChatResponse.self, from: data)
 
-        guard let content = decoded.choices.first?.message.content else
+        guard let content = decoded.choices.first?.message.content
+        else
         {
             throw TranslationError.emptyResponse
         }

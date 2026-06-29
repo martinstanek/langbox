@@ -2,25 +2,26 @@ import SwiftUI
 
 struct SettingsView: View
 {
-    private var appSettings: AppSettings = AppSettingsProvider.getSettings()
-    
+    @Environment(AppSettings.self) private var appSettings
+
     var body: some View
     {
+        @Bindable var settings = appSettings
         Form
         {
             Section("LM Studio")
             {
-                TextField("URL:", text: appSettings.$lmStudioURL)
+                TextField("URL:", text: $settings.lmStudioURL)
                     .textFieldStyle(.plain)
                     .multilineTextAlignment(.trailing)
-                TextField("Model:", text: appSettings.$lmStudioModel)
+                TextField("Model:", text: $settings.lmStudioModel)
                     .textFieldStyle(.plain)
                     .multilineTextAlignment(.trailing)
             }
 
             Section("Behaviour")
             {
-                Toggle("Translate upon paste", isOn: appSettings.$translateUponPaste)
+                Toggle("Translate upon paste", isOn: $settings.translateUponPaste)
                 Text("Automatically translate whenever text is pasted into the source field.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -28,7 +29,7 @@ struct SettingsView: View
 
             Section("Tone")
             {
-                Picker("", selection: appSettings.translationStyle)
+                Picker("", selection: $settings.translationStyle)
                 {
                     ForEach(TranslationStyle.allCases, id: \.self)
                     {
@@ -50,4 +51,5 @@ struct SettingsView: View
 #Preview
 {
     SettingsView()
+        .environment(AppSettings())
 }

@@ -1,40 +1,47 @@
 import SwiftUI
 
-public struct AppSettings
+@Observable
+class AppSettings
 {
-    @AppStorage("translateUponPaste") public var translateUponPaste = false
-    @AppStorage("translationStyle") public var translationStyleRaw = TranslationStyle.formal.rawValue
-    @AppStorage("lmStudioURL") public var lmStudioURL = "http://10.0.1.106:7001"
-    @AppStorage("lmStudioModel") public var lmStudioModel = "google/gemma-3-12b"
-    @AppStorage("sourceLanguage") public var sourceLanguage = "English"
-    @AppStorage("targetLanguage") public var targetLanguage = "Czech"
-    
-    public var translationStyle: Binding<TranslationStyle>
+    var sourceLanguage: String = UserDefaults.standard.string(forKey: "sourceLanguage") ?? "English"
     {
-        Binding(
-            get: { TranslationStyle(rawValue: translationStyleRaw) ?? .formal },
-            set: { translationStyleRaw = $0.rawValue })
+        didSet { UserDefaults.standard.set(sourceLanguage, forKey: "sourceLanguage") }
     }
-    
-    public let languages =
-    [
+
+    var targetLanguage: String = UserDefaults.standard.string(forKey: "targetLanguage") ?? "Czech"
+    {
+        didSet { UserDefaults.standard.set(targetLanguage, forKey: "targetLanguage") }
+    }
+
+    var translateUponPaste: Bool = UserDefaults.standard.bool(forKey: "translateUponPaste")
+    {
+        didSet { UserDefaults.standard.set(translateUponPaste, forKey: "translateUponPaste") }
+    }
+
+    var translationStyleRaw: String = UserDefaults.standard.string(forKey: "translationStyle") ?? TranslationStyle.formal.rawValue
+    {
+        didSet { UserDefaults.standard.set(translationStyleRaw, forKey: "translationStyle") }
+    }
+
+    var lmStudioURL: String = UserDefaults.standard.string(forKey: "lmStudioURL") ?? "http://10.0.1.106:7001"
+    {
+        didSet { UserDefaults.standard.set(lmStudioURL, forKey: "lmStudioURL") }
+    }
+
+    var lmStudioModel: String = UserDefaults.standard.string(forKey: "lmStudioModel") ?? "google/gemma-3-12b"
+    {
+        didSet { UserDefaults.standard.set(lmStudioModel, forKey: "lmStudioModel") }
+    }
+
+    var translationStyle: TranslationStyle
+    {
+        get { TranslationStyle(rawValue: translationStyleRaw) ?? .formal }
+        set { translationStyleRaw = newValue.rawValue }
+    }
+
+    let languages = [
         "English", "Czech", "Slovak", "Spanish", "French",
         "German", "Italian", "Portuguese", "Polish", "Russian",
         "Japanese", "Chinese", "Korean", "Arabic"
     ]
-}
-
-public class AppSettingsProvider
-{
-    private static var settings: AppSettings?
-    
-    public static func getSettings() -> AppSettings
-    {
-        if (settings == nil)
-        {
-            settings = AppSettings()
-        }
-        
-        return settings!
-    }
 }

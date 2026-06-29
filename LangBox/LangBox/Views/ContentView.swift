@@ -2,8 +2,8 @@ import SwiftUI
 
 struct ContentView: View
 {
-    private var appSettings: AppSettings = AppSettingsProvider.getSettings()
-    
+    @Environment(AppSettings.self) private var appSettings
+
     @State private var inputText = ""
     @State private var outputText = ""
     @State private var isTranslating = false
@@ -70,9 +70,10 @@ struct ContentView: View
 
     private var languageBar: some View
     {
-        HStack(spacing: 8)
+        @Bindable var settings = appSettings
+        return HStack(spacing: 8)
         {
-            Picker("", selection: appSettings.$sourceLanguage)
+            Picker("", selection: $settings.sourceLanguage)
             {
                 ForEach(appSettings.languages, id: \.self) { Text($0) }
             }
@@ -82,7 +83,7 @@ struct ContentView: View
             Button
             {
                 swap(&appSettings.sourceLanguage, &appSettings.targetLanguage)
-                swap(&inputText, &outputText)
+                if !outputText.isEmpty { swap(&inputText, &outputText) }
             }
             label:
             {
@@ -91,7 +92,7 @@ struct ContentView: View
             .buttonStyle(.plain)
             .help("Swap languages")
 
-            Picker("", selection: appSettings.$targetLanguage)
+            Picker("", selection: $settings.targetLanguage)
             {
                 ForEach(appSettings.languages, id: \.self) { Text($0) }
             }
@@ -171,7 +172,9 @@ struct ContentView: View
                 text: inputText,
                 from: appSettings.sourceLanguage,
                 to: appSettings.targetLanguage,
-                style: appSettings.translationStyle.wrappedValue
+                style: appSettings.translationStyle,
+                baseURL: appSettings.lmStudioURL,
+                model: appSettings.lmStudioModel
             )
         }
         catch
