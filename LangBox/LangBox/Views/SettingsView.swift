@@ -60,7 +60,7 @@ struct SettingsView: View
             }
         }
         .formStyle(.grouped)
-        .frame(width: 360, height: 600)
+        .frame(width: 360, height: 620)
     }
 }
 
