@@ -17,6 +17,11 @@ class AppSettings
     {
         didSet { UserDefaults.standard.set(translateUponPaste, forKey: "translateUponPaste") }
     }
+    
+    var translateUponEnter: Bool = UserDefaults.standard.bool(forKey: "translateUponEnter")
+    {
+        didSet { UserDefaults.standard.set(translateUponPaste, forKey: "translateUponEnter") }
+    }
 
     var translationStyleRaw: String = UserDefaults.standard.string(forKey: "translationStyle") ?? TranslationStyle.formal.rawValue
     {

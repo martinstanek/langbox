@@ -25,6 +25,10 @@ struct SettingsView: View
                 Text("Automatically translate whenever text is pasted into the source field.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                Toggle("Translate upon enter", isOn: $settings.translateUponEnter)
+                Text("Automatically translate whenever enter is pressed in the input field.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section("Tone")
@@ -44,7 +48,7 @@ struct SettingsView: View
             }
         }
         .formStyle(.grouped)
-        .frame(width: 360, height: 480)
+        .frame(width: 360, height: 510)
     }
 }
 

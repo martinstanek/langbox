@@ -2,7 +2,13 @@ import Foundation
 
 struct TranslationService
 {
-    func translate(text: String, from source: String, to target: String, style: TranslationStyle, baseURL: String, model: String) async throws -> String
+    func translate(
+        text: String,
+        from source: String,
+        to target: String,
+        style: TranslationStyle,
+        baseURL: String,
+        model: String) async throws -> String
     {
         guard let url = URL(string: "\(baseURL)/v1/chat/completions")
         else
